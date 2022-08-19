@@ -36,7 +36,7 @@ namespace CRUD_API.Src.Repository.Implements
         /// </summary>
         public async Task<Usuario> PegarUsuarioPorId(int id)
         {
-            if(!(ExisteId(id))) throw new Exception("Id do usuário não foi encontrado!");
+            if(!ExisteId(id)) throw new Exception("Id do usuário não foi encontrado!");
 
             return await _contexto.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
 
@@ -68,7 +68,7 @@ namespace CRUD_API.Src.Repository.Implements
         /// </summary>
         public async Task AtualizarUsuario(Usuario usuario)
         {
-            var aux = await PegarUsuarioPorId(usuario.Id);
+            var aux = await _contexto.Usuarios.FirstOrDefaultAsync(u => u.Id == usuario.Id);
             aux.Nome = usuario.Nome;
             aux.DataNascimento = usuario.DataNascimento;
             aux.Curso = usuario.Curso;
@@ -83,7 +83,8 @@ namespace CRUD_API.Src.Repository.Implements
         /// </summary>
         public async Task DeletarUsuario(int id)
         {
-            _contexto.Usuarios.Remove(await PegarUsuarioPorId(id));
+            var aux = await _contexto.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+            _contexto.Usuarios.Remove(aux);
             await _contexto.SaveChangesAsync();
         }
         #endregion

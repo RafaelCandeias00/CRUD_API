@@ -29,7 +29,17 @@ namespace CRUD_API
         public void ConfigureServices(IServiceCollection services)
         {
             // Configuração do banco de dados
-            services.AddDbContext<CrudContexto>(opt => opt.UseSqlServer(Configuration["ConnectionStringsDev:DefaultConnection"]));
+            if (Configuration["Enviroment:Start"] == "PROD")
+            {
+                services.AddEntityFrameworkNpgsql()
+                    .AddDbContext<CrudContexto>(
+                    opt =>
+                    opt.UseNpgsql(Configuration["ConnectionStringsProd:DefaultConnection"]));
+            }
+            else
+            {
+                services.AddDbContext<CrudContexto>(opt => opt.UseSqlServer(Configuration["ConnectionStringsDev:DefaultConnection"]));
+            }            
 
             // Adicionando escopo do repositório
             services.AddScoped<IUsuario, UsuarioRepositorio>();
@@ -92,6 +102,13 @@ namespace CRUD_API
             }
 
             contexto.Database.EnsureCreated();
+            app.UseDeveloperExceptionPage();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CRUD v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

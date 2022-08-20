@@ -29,7 +29,8 @@ namespace CRUD_API.Src.Controllers
         /// Pegar todos os usuários
         /// </summary>
         /// <returns>ActionResult</returns>
-        /// <response code="200"> Retorna o usuario </response>
+        /// <response code="200"> Lista de postagens </response>
+        /// <response code="204"> Lista vazia </response>
         [HttpGet]
         public async Task<ActionResult> ListarTodosUsuarios()
         {
@@ -45,8 +46,8 @@ namespace CRUD_API.Src.Controllers
         /// </summary>
         /// <param name="id">Id do usuario</param>
         /// <returns>ActionResult</returns>
-        /// <response code="200"> Retorna o usuario </response>
-        /// <response code="404"> Id não existente </response>
+        /// <response code="200"> Retorna o usuário </response>
+        /// <response code="404"> Usuário não existente </response>
         [HttpGet("id/{id}")]
         public async Task<ActionResult> PegarUsuarioPorId([FromRoute] int id)
         {
@@ -67,16 +68,17 @@ namespace CRUD_API.Src.Controllers
         /// <returns>ActionResult</returns> 
         /// <remarks> 
         /// Exemplo de requisição: 
-        /// POST /api/Usuarios/cadastrar 
+        /// 
+        ///     POST /api/Usuarios/cadastrar 
         ///     { 
         ///         "nome": "Nome Do Usuario", 
         ///         "DataNascimento": "2022-08-19T11:07:37.470Z", 
-        ///         "Curso": "Análise e Desenvolvimento de Sistemas", 
+        ///         "Curso": "Nome do Curso", 
         ///         "EstadoCivil": "SOLTEIRO"
-        ///     } 
+        ///     }
+        ///     
         /// </remarks> 
-        /// <response code="201">Retorna usuario criado</response> 
-        /// <response code="401">Id ja cadastrado</response>
+        /// <response code="201">Retorna usuario criado</response>
         [HttpPost("cadastrar")]
         public async Task<ActionResult> CriarUsuario([FromBody] Usuario usuario)
         {
@@ -91,17 +93,19 @@ namespace CRUD_API.Src.Controllers
         /// <returns>ActionResult</returns> 
         /// <remarks> 
         /// Exemplo de requisição: 
-        /// PUT /api/Usuarios/atualizar
+        /// 
+        ///     POST /api/Usuarios/cadastrar 
         ///     { 
-        ///         "id": 0,    
+        ///         "id": 0,
         ///         "nome": "Nome Do Usuario", 
-        ///         "DataNascimento": "usuario@email.com", 
-        ///         "Curso": "Análise e Desenvolvimento de Sistemas", 
+        ///         "DataNascimento": "2022-08-19T11:07:37.470Z", 
+        ///         "Curso": "Nome do Curso", 
         ///         "EstadoCivil": "SOLTEIRO"
-        ///     } 
+        ///     }
+        ///     
         /// </remarks> 
-        /// <response code="201">Retorna usuario criado</response> 
-        /// <response code="401">E-mail ja cadastrado</response>
+        /// <response code="200">Retorna usuario atualizado</response> 
+        /// <response code="400">Erro na requisição</response>
         [HttpPut]
         public async Task<ActionResult> AtualizarUsuario([FromBody] Usuario usuario)
         {
@@ -119,6 +123,10 @@ namespace CRUD_API.Src.Controllers
         /// <summary>
         /// Deletar usuário pelo Id
         /// </summary>
+        /// <param name="id">Id do usuário</param>
+        /// <returns>ActionResult</returns>
+        /// <response code="204">Usuário deletado</response>
+        /// <response code="404">Id do usuário não existe</response>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletarUsuario([FromRoute] int id)
         {
